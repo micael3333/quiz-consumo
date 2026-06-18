@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descubra seu perfil de consumo</title>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2443426313120587');
+fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2443426313120587&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --text: #1A1814;
+    --text-muted: #7A7670;
+    --text-light: #B0ADA8;
+    --border: #E8E4DF;
+    --accent: #C9785A;
+    --accent-light: #F5EDE9;
+    --accent-dark: #9E5A40;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: var(--font-body); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 520px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* HERO */
+  .hero { padding: 52px 0 36px; text-align: center; }
+  .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .hero-title { font-family: var(--font-display); font-size: clamp(28px, 7vw, 38px); line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 15px; color: var(--text-muted); line-height: 1.65; max-width: 380px; margin: 0 auto 28px; }
+  .hero-meta { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-light); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; }
+  .hero-meta span { color: var(--text-muted); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light); margin-bottom: 8px; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .4s ease; }
+
+  /* CARD */
+  .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 28px 24px; margin-bottom: 12px; }
+
+  /* STEPS */
+  .q-step { display: none; }
+  .q-step.active { display: block; }
+  .q-num { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .q-text { font-family: var(--font-display); font-size: clamp(17px, 4.5vw, 21px); line-height: 1.3; color: var(--text); margin-bottom: 22px; }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; transition: border-color .15s, background .15s; text-align: left; width: 100%; font-family: var(--font-body); }
+  .option:hover { border-color: #D4C4BC; background: #F0ECE8; }
+  .option.selected { border-color: var(--accent); background: var(--accent-light); }
+  .option-marker { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: border-color .15s, background .15s; background: var(--surface); }
+  .option.selected .option-marker { border-color: var(--accent); background: var(--accent); }
+  .option.selected .option-marker::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+  .option-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+  .option.selected .option-text { color: var(--accent-dark); font-weight: 500; }
+
+  /* FIELDS */
+  .fields-section { display: flex; flex-direction: column; gap: 14px; }
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+  .field-input { width: 100%; padding: 13px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--bg); font-family: var(--font-body); font-size: 15px; color: var(--text); outline: none; transition: border-color .15s; }
+  .field-input:focus { border-color: var(--accent); background: var(--surface); }
+  .field-input::placeholder { color: var(--text-light); }
+  .field-hint { font-size: 11px; color: var(--text-light); line-height: 1.4; }
+
+  /* NAV */
+  .nav-row { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
+  .btn-back { width: 42px; height: 42px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; transition: border-color .15s; }
+  .btn-back:hover { border-color: #C0BCB6; }
+  .btn-back svg { width: 16px; height: 16px; }
+  .btn-next { flex: 1; padding: 13px 20px; border-radius: var(--radius-sm); border: none; background: var(--accent); color: white; font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s, opacity .15s; }
+  .btn-next:hover { background: var(--accent-dark); }
+  .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-next.full { width: 100%; flex: none; }
+
+  /* LOADING */
+  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(247,245,242,.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+  .loading-overlay.show { display: flex; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; color: var(--text-muted); }
+
+  /* RESULT */
+  #result-screen { display: none; }
+  .result-hero { text-align: center; padding: 44px 0 28px; }
+  .result-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; margin-bottom: 20px; }
+  .result-title { font-family: var(--font-display); font-size: clamp(26px, 7vw, 36px); line-height: 1.15; margin-bottom: 14px; }
+  .result-sub { font-size: 15px; color: var(--text-muted); line-height: 1.65; max-width: 400px; margin: 0 auto; }
+  .result-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; margin-bottom: 12px; }
+  .result-section-title { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 14px; }
+  .trait-list { display: flex; flex-direction: column; gap: 10px; }
+  .trait-item { display: flex; align-items: flex-start; gap: 10px; }
+  .trait-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+  .trait-text { font-size: 14px; color: var(--text); line-height: 1.55; }
+  .trigger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .trigger-pill { padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.3; }
+  .trigger-pill.active { font-weight: 500; color: var(--text); }
+  .impulse-bar { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+  .impulse-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .impulse-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+  .impulse-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .cta-section { text-align: center; padding: 12px 0 0; }
+  .cta-text { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+  .btn-cta { display: block; width: 100%; padding: 15px 20px; border-radius: var(--radius-sm); border: none; background: var(--accent); color: white; font-family: var(--font-body); font-size: 15px; font-weight: 500; cursor: pointer; transition: background .15s; text-decoration: none; }
+  .btn-cta:hover { background: var(--accent-dark); }
+  .share-hint { font-size: 11px; color: var(--text-light); margin-top: 12px; }
+
+  /* SCALE */
+  .scale-wrap { margin-top: 4px; }
+  .scale-input { width: 100%; -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; outline: none; cursor: pointer; margin: 16px 0 8px; }
+  .scale-input::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.18); }
+  .scale-input::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 3px solid white; }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); }
+  .scale-value { text-align: center; font-size: 22px; font-family: var(--font-display); color: var(--accent); margin: 8px 0 4px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .q-step.active .card { animation: fadeUp .25s ease; }
+  @media (max-width: 480px) { .card { padding: 22px 18px; } .trigger-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Salvando suas respostas...</div>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero" id="hero-section">
+    <div class="hero-eyebrow">teste de comportamento</div>
+    <h1 class="hero-title">Descubra o padrão que você <em>repete</em> toda vez que abre o app de compras</h1>
+    <p class="hero-sub">8 perguntas. Sem julgamento. Só dados — e o que eles revelam sobre você.</p>
+    <div class="hero-meta">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>Leva menos de 3 minutos</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-info">
+      <span id="progress-label">Pergunta 1 de 8</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div id="form-section">
+
+    <div class="q-step active" id="step-0">
+      <div class="card">
+        <div class="q-num">antes de começar</div>
+        <p class="q-text">Onde envio o seu resultado?</p>
+        <div class="fields-section">
+          <div class="field-group">
+            <label class="field-label">Seu nome</label>
+            <input class="field-input" type="text" id="field-nome" placeholder="Como prefere ser chamada?" autocomplete="given-name">
+          </div>
+          <div class="field-group">
+            <label class="field-label">E-mail</label>
+            <input class="field-input" type="email" id="field-email" placeholder="seu@email.com" autocomplete="email">
+          </div>
+          <div class="field-group">
+            <label class="field-label">WhatsApp</label>
+            <input class="field-input" type="tel" id="field-wpp" placeholder="(00) 00000-0000" autocomplete="tel">
+            <span class="field-hint">Envio o resultado completo + análise do seu perfil por aqui.</span>
+          </div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-next full" onclick="startQuiz()">Começar o teste →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-1">
+      <div class="card">
+        <div class="q-num">pergunta 1 de 8</div>
+        <p class="q-text">Você acabou de ter um dia horrível. O que você faz?</p>
+        <div class="options" data-q="1">
+          <button class="option" data-v="ansiedade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Abre o celular e começa a rolar produtos sem intenção nenhuma</span></button>
+          <button class="option" data-v="recompensa" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Compra algo que estava de olho há dias — você merece</span></button>
+          <button class="option" data-v="controle" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Organiza listas de coisas que quer ou precisa comprar</span></button>
+          <button class="option" data-v="tedio" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Vai assistir algo, dormir ou fazer qualquer outra coisa pra distrair</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-1" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-2">
+      <div class="card">
+        <div class="q-num">pergunta 2 de 8</div>
+        <p class="q-text">O que passa pela sua cabeça quando você vê "últimas unidades"?</p>
+        <div class="options" data-q="2">
+          <button class="option" data-v="oportunidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Compro logo antes que acabe — não quero perder</span></button>
+          <button class="option" data-v="status" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Se todo mundo quer, deve ser bom — coloco no carrinho</span></button>
+          <button class="option" data-v="controle" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Analiso se realmente preciso antes de qualquer decisão</span></button>
+          <button class="option" data-v="neutro" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Raramente me afeta, passo direto</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-2" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-3">
+      <div class="card">
+        <div class="q-num">pergunta 3 de 8</div>
+        <p class="q-text">Qual dessas frases combina mais com você?</p>
+        <div class="options" data-q="3">
+          <button class="option" data-v="identidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">O que tenho diz quem sou — meus produtos me representam</span></button>
+          <button class="option" data-v="pertencimento" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Compro o que as pessoas que admiro usam — faz parte de um universo</span></button>
+          <button class="option" data-v="oportunidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Bom produto + bom preço é simplesmente irrecusável</span></button>
+          <button class="option" data-v="recompensa" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Trabalho duro e mereço me presentear — é autocuidado</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-3" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-4">
+      <div class="card">
+        <div class="q-num">pergunta 4 de 8</div>
+        <p class="q-text">Com que frequência você compra algo sem ter planejado antes?</p>
+        <div class="scale-wrap">
+          <div class="scale-value" id="scale-display">3</div>
+          <input type="range" class="scale-input" id="scale-input" min="1" max="5" value="3" step="1" oninput="updateScale(this.value)">
+          <div class="scale-labels"><span>Quase nunca</span><span>Toda semana</span></div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-5">
+      <div class="card">
+        <div class="q-num">pergunta 5 de 8</div>
+        <p class="q-text">O que você sente depois de uma compra que não estava nos planos?</p>
+        <div class="options" data-q="5">
+          <button class="option" data-v="ansiedade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Culpa ou arrependimento — fico pensando se devia ter comprado</span></button>
+          <button class="option" data-v="recompensa" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Satisfação imediata — e depois sigo em frente</span></button>
+          <button class="option" data-v="tedio" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Uma euforia rápida que passa logo, quase como entrar em modo automático</span></button>
+          <button class="option" data-v="controle" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Já tinha pensado antes de comprar, então fico tranquila</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-5" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-6">
+      <div class="card">
+        <div class="q-num">pergunta 6 de 8</div>
+        <p class="q-text">Em qual situação você gasta mais sem perceber?</p>
+        <div class="options" data-q="6">
+          <button class="option" data-v="tedio" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Quando estou entediada — o scroll vira automático</span></button>
+          <button class="option" data-v="ansiedade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Quando estou ansiosa ou estressada — dá sensação de controle</span></button>
+          <button class="option" data-v="pertencimento" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Quando vejo alguém usando algo que acho incrível</span></button>
+          <button class="option" data-v="oportunidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Quando aparece uma promoção boa — o desconto é o gatilho</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-6" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-7">
+      <div class="card">
+        <div class="q-num">pergunta 7 de 8</div>
+        <p class="q-text">Como você costuma pesquisar antes de comprar algo?</p>
+        <div class="options" data-q="7">
+          <button class="option" data-v="controle" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Comparo preços, avaliações e alternativas — preciso ter certeza</span></button>
+          <button class="option" data-v="status" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Olho quem está usando — influenciadores e pessoas que admiro</span></button>
+          <button class="option" data-v="identidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Verifico se combina com o meu estilo e com o que já tenho</span></button>
+          <button class="option" data-v="ansiedade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">Raramente pesquiso muito — quando bate a vontade, decido rápido</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-7" disabled onclick="nextStep()">Próxima →</button>
+      </div>
+    </div>
+
+    <div class="q-step" id="step-8">
+      <div class="card">
+        <div class="q-num">pergunta 8 de 8</div>
+        <p class="q-text">Qual dessas afirmações te incomoda mais ouvir?</p>
+        <div class="options" data-q="8">
+          <button class="option" data-v="status" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">"Isso aí é imitação, não é original"</span></button>
+          <button class="option" data-v="identidade" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">"Você não parece a pessoa que usaria isso"</span></button>
+          <button class="option" data-v="pertencimento" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">"Você comprou porque viu todo mundo comprando?"</span></button>
+          <button class="option" data-v="controle" onclick="selectOption(this)"><div class="option-marker"></div><span class="option-text">"Você foi impulsiva e pagou mais caro do que precisava"</span></button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="btn-next" id="next-8" disabled onclick="submitAndShowResult()">Ver meu perfil →</button>
+      </div>
+    </div>
+
+  </div><!-- /form-section -->
+
+  <!-- RESULT -->
+  <div id="result-screen">
+    <div class="result-hero">
+      <div class="result-badge" id="result-badge"></div>
+      <h2 class="result-title" id="result-title"></h2>
+      <p class="result-sub" id="result-sub"></p>
+    </div>
+    <div class="result-card">
+      <div class="result-section-title">o que move suas compras</div>
+      <div class="trait-list" id="trait-list"></div>
+    </div>
+    <div class="result-card">
+      <div class="result-section-title">seus gatilhos principais</div>
+      <div class="trigger-grid" id="trigger-grid"></div>
+    </div>
+    <div class="result-card">
+      <div class="result-section-title">índice de impulsividade</div>
+      <div class="impulse-bar">
+        <span class="impulse-label" style="width:70px">Calculado</span>
+        <div class="impulse-track"><div class="impulse-fill" id="impulse-fill" style="width:0%"></div></div>
+        <span class="impulse-label" id="impulse-val"></span>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:12px;line-height:1.55" id="impulse-desc"></p>
+    </div>
+    <div class="result-card">
+      <div class="cta-section">
+        <p class="cta-text" id="cta-text"></p>
+        <a href="#" class="btn-cta" id="cta-btn">Quero entender mais →</a>
+        <p class="share-hint">Resultado enviado para o seu WhatsApp em instantes.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ── CONFIGURAÇÃO ──────────────────────────────────────────────
+// Cole aqui a URL do seu Google Apps Script após publicar
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxClOU5qagQitDxHahKv0NcChhcaM75BTr-TFlL1b7SS-YDshTSzVqBMZdAUmvGRWwQ/exec';
+// ─────────────────────────────────────────────────────────────
+
+const TOTAL_STEPS = 8;
+let currentStep = 0;
+const answers = {};
+let scaleValue = 3;
+answers['impulsividade'] = '3';
+
+const PROFILES = {
+  ansiedade: {
+    name: 'Alívio & Ansiedade', emoji: '🌊',
+    badgeBg: '#EEF0FB', badgeBorder: '#AFA9EC', badgeColor: '#3C3489', accentColor: '#534AB7',
+    title: 'Você compra para se acalmar',
+    sub: 'Suas compras não são sobre os produtos — são sobre regular o que você sente. O scroll vira um anestésico rápido quando o mundo parece pesado demais.',
+    traits: ['O gatilho costuma ser emocional: estresse, ansiedade ou sobrecarga acumulada','Você sente alívio temporário no momento da compra, mas a culpa aparece depois','Tende a comprar mais em períodos de pressão — seja no trabalho ou na vida pessoal','O carrinho funciona como uma válvula de escape que o cérebro aprendeu a acionar'],
+    triggers: ['Estresse acumulado','Ansiedade','Sobrecarga emocional','Dias difíceis'],
+    ctaText: 'Entender esse padrão é o primeiro passo para mudar a relação com o consumo — sem culpa e sem julgamento.',
+    impulseLow: 'Controlada', impulseHigh: 'Muito impulsiva'
+  },
+  recompensa: {
+    name: 'Recompensa Rápida', emoji: '✨',
+    badgeBg: '#FDF0EB', badgeBorder: '#F0997B', badgeColor: '#712B13', accentColor: '#D85A30',
+    title: 'Você compra porque merece',
+    sub: 'Você trabalha muito, se exige muito, e aprendeu a se recompensar como forma de autocuidado. Tem algo bonito nisso — e também um padrão que vale a pena conhecer.',
+    traits: ['O consumo está ligado ao senso de mérito: você compra mais depois de esforço ou conquistas','A compra funciona como recompensa emocional — um prêmio que você dá pra si mesma','Em dias pesados, o valor das compras tende a subir junto com o nível do estresse','Paradoxalmente, pode estar gastando para compensar o custo emocional do trabalho'],
+    triggers: ['Dias de esforço','Conquistas','Autocuidado','Merecimento'],
+    ctaText: 'Você merece se recompensar de verdade — não só quando o estresse bate. Entender essa diferença muda tudo.',
+    impulseLow: 'Seletiva', impulseHigh: 'Impulsiva'
+  },
+  status: {
+    name: 'Status & Validação', emoji: '💎',
+    badgeBg: '#FFFBF0', badgeBorder: '#EF9F27', badgeColor: '#633806', accentColor: '#BA7517',
+    title: 'Você compra para confirmar quem você é',
+    sub: 'Você tem bom gosto e é seletiva. Não compra qualquer coisa — compra o que representa quem você quer ser. A questão é entender quando você está expressando sua identidade vs confirmando ela.',
+    traits: ['Cada compra é uma pequena declaração sobre quem você é ou quer ser percebida','Você pesquisa antes de comprar — quer o item certo, não só qualquer item','A opinião alheia sobre suas escolhas importa mais do que você admite','Tende a valorizar marcas e itens que carregam um sinal social reconhecível'],
+    triggers: ['Reconhecimento social','Identidade visual','Originalidade','Marcas'],
+    ctaText: 'As melhores coleções — de roupa, de experiências, de vida — são construídas com intenção. Quer aprender a fazer isso?',
+    impulseLow: 'Calculada', impulseHigh: 'Impulsiva no status'
+  },
+  pertencimento: {
+    name: 'Pertencimento', emoji: '🪢',
+    badgeBg: '#F0FAF6', badgeBorder: '#5DCAA5', badgeColor: '#085041', accentColor: '#1D9E75',
+    title: 'Você compra para fazer parte',
+    sub: 'Você não compra produtos — você compra o universo que eles representam. Cada item é uma forma de se aproximar de uma vibe, uma comunidade, um estilo de vida que te atrai.',
+    traits: ['Você é muito influenciada por quem admira — o produto vira ponte para esse universo','Tende a ter um guarda-roupa ou casa com referências de estilos diferentes','A compra acontece quando você se identifica com quem está usando algo, não só com o item','Pertencer a uma tribo, mesmo que virtualmente, motiva suas escolhas de consumo'],
+    triggers: ['Influência social','Identificação','Comunidade','Vibe coletiva'],
+    ctaText: 'Quando você descobre sua tribo de verdade — não a que você admira de longe, mas a que é genuinamente sua — as compras mudam de sentido.',
+    impulseLow: 'Seletiva', impulseHigh: 'Influenciável'
+  },
+  tedio: {
+    name: 'Tédio & Preenchimento', emoji: '🔄',
+    badgeBg: '#F2EFFE', badgeBorder: '#AFA9EC', badgeColor: '#26215C', accentColor: '#7F77DD',
+    title: 'Você compra para preencher o vazio',
+    sub: 'Quando não tem nada acontecendo, o scroll vira automático. A compra não é sobre o produto — é sobre a sensação de movimento, de novidade, de algo acontecendo.',
+    traits: ['O tédio é seu principal gatilho: quando o dia está parado, a compra vira entretenimento','Você entra em lojas online sem intenção nenhuma e sai com algo no carrinho','A euforia da compra é rápida e passageira — logo precisa da próxima novidade','Fins de semana e férias podem ser períodos de mais gasto por falta de rotina'],
+    triggers: ['Tédio','Falta de estímulo','Fim de semana','Scroll automático'],
+    ctaText: 'Entender o que você realmente está buscando quando entra no app — e encontrar isso de outras formas — muda a relação com o consumo.',
+    impulseLow: 'Moderada', impulseHigh: 'Altamente impulsiva'
+  },
+  controle: {
+    name: 'Controle & Organização', emoji: '📋',
+    badgeBg: '#EBF5FF', badgeBorder: '#85B7EB', badgeColor: '#042C53', accentColor: '#378ADD',
+    title: 'Você compra com intenção e estratégia',
+    sub: 'Você pensa antes de comprar, compara opções e raramente se arrepende. Seu padrão de consumo é mais racional do que emocional — mas isso tem um lado oculto que vale conhecer.',
+    traits: ['Você pesquisa antes de comprar — preço, avaliações, alternativas','Raramente compra por impulso puro; há sempre alguma racionalização envolvida','A organização e o planejamento das compras te dão uma sensação de controle','Pode usar a pesquisa excessiva como forma de adiar decisões ou como ritual em si'],
+    triggers: ['Pesquisa e comparação','Planejamento','Custo-benefício','Controle'],
+    ctaText: 'Você já tem a parte racional. A questão é entender o que está por baixo do planejamento — e o que ele está te ajudando a evitar.',
+    impulseLow: 'Muito controlada', impulseHigh: 'Moderada'
+  }
+};
+
+function startQuiz() {
+  const email = document.getElementById('field-email').value.trim();
+  const wpp = document.getElementById('field-wpp').value.trim();
+  if (!email && !wpp) { alert('Preencha pelo menos o e-mail ou WhatsApp para receber seu resultado.'); return; }
+  answers['nome'] = document.getElementById('field-nome').value.trim();
+  answers['email'] = email;
+  answers['wpp'] = wpp;
+  // Pixel: Lead captado
+  if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+  document.getElementById('hero-section').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'block';
+  goToStep(1);
+}
+
+function goToStep(n) {
+  document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById('step-' + n);
+  if (t) { t.classList.add('active'); currentStep = n; }
+  updateProgress();
+}
+
+function nextStep() { if (currentStep < TOTAL_STEPS) goToStep(currentStep + 1); }
+
+function prevStep() {
+  if (currentStep > 1) goToStep(currentStep - 1);
+  else {
+    document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-0').classList.add('active');
+    document.getElementById('hero-section').style.display = 'block';
+    document.getElementById('progress-wrap').style.display = 'none';
+    currentStep = 0;
+  }
+}
+
+function updateProgress() {
+  if (currentStep === 0) return;
+  const pct = Math.round((currentStep / TOTAL_STEPS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = 'Pergunta ' + currentStep + ' de ' + TOTAL_STEPS;
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+function selectOption(btn) {
+  const group = btn.closest('.options');
+  group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers['q' + group.dataset.q] = btn.dataset.v;
+  const nb = document.getElementById('next-' + currentStep);
+  if (nb) nb.disabled = false;
+}
+
+function updateScale(val) {
+  scaleValue = parseInt(val);
+  document.getElementById('scale-display').textContent = val;
+  answers['impulsividade'] = val;
+}
+
+function computeProfile() {
+  const count = {};
+  ['q1','q2','q3','q5','q6','q7','q8'].forEach(k => {
+    const v = answers[k];
+    if (v && v !== 'neutro') count[v] = (count[v] || 0) + 1;
+  });
+  const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
+  return sorted.length > 0 ? sorted[0][0] : 'controle';
+}
+
+async function submitAndShowResult() {
+  const profile = computeProfile();
+  answers['perfil'] = profile;
+  answers['timestamp'] = new Date().toLocaleString('pt-BR', { timeZone: 'America/Cuiaba' });
+
+  // Pixel: Quiz completo
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'CompleteRegistration', { content_name: profile });
+  }
+
+  // Enviar para Google Sheets
+  if (SHEETS_URL) {
+    document.getElementById('loading-overlay').classList.add('show');
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: answers['timestamp'],
+          nome: answers['nome'] || '',
+          email: answers['email'] || '',
+          whatsapp: answers['wpp'] || '',
+          q1: answers['q1'] || '',
+          q2: answers['q2'] || '',
+          q3: answers['q3'] || '',
+          impulsividade: answers['impulsividade'] || '3',
+          q5: answers['q5'] || '',
+          q6: answers['q6'] || '',
+          q7: answers['q7'] || '',
+          q8: answers['q8'] || '',
+          perfil: profile
+        })
+      });
+    } catch(e) { console.error('Sheets error:', e); }
+    document.getElementById('loading-overlay').classList.remove('show');
+  }
+
+  renderResult(profile);
+}
+
+function renderResult(profile) {
+  const p = PROFILES[profile] || PROFILES['controle'];
+  const imp = scaleValue;
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'block';
+
+  const badge = document.getElementById('result-badge');
+  badge.style.background = p.badgeBg;
+  badge.style.border = '1px solid ' + p.badgeBorder;
+  badge.style.color = p.badgeColor;
+  badge.textContent = p.emoji + '  Seu perfil: ' + p.name;
+
+  document.getElementById('result-title').textContent = p.title;
+  document.getElementById('result-sub').textContent = p.sub;
+
+  const tl = document.getElementById('trait-list');
+  tl.innerHTML = '';
+  p.traits.forEach(t => {
+    tl.innerHTML += `<div class="trait-item"><div class="trait-dot" style="background:${p.accentColor}"></div><span class="trait-text">${t}</span></div>`;
+  });
+
+  const tg = document.getElementById('trigger-grid');
+  tg.innerHTML = '';
+  p.triggers.forEach(t => {
+    tg.innerHTML += `<div class="trigger-pill active" style="background:${p.badgeBg};border-color:${p.badgeBorder};color:${p.badgeColor}">${t}</div>`;
+  });
+
+  const impPct = Math.round((imp / 5) * 100);
+  document.getElementById('impulse-fill').style.background = p.accentColor;
+  setTimeout(() => { document.getElementById('impulse-fill').style.width = impPct + '%'; }, 100);
+
+  const impVal = document.getElementById('impulse-val');
+  const impDesc = document.getElementById('impulse-desc');
+  if (imp <= 2) {
+    impVal.textContent = p.impulseLow + ' (' + imp + '/5)';
+    impDesc.textContent = 'Você tende a pensar antes de agir. Suas compras têm mais intenção do que impulso.';
+  } else if (imp === 3) {
+    impVal.textContent = 'Equilibrada (3/5)';
+    impDesc.textContent = 'Você alterna entre compras planejadas e impulsivas dependendo do seu estado emocional no momento.';
+  } else {
+    impVal.textContent = p.impulseHigh + ' (' + imp + '/5)';
+    impDesc.textContent = 'Suas compras respondem muito ao momento emocional. O gatilho certo no momento certo é suficiente para uma compra não planejada.';
+  }
+
+  document.getElementById('cta-text').textContent = p.ctaText;
+  rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
